@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native"; // Import Button here
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
 
-const MPVControlsScreen = () => {
+const MPVControlsScreen = ({ navigation }) => {
+  // Destructure navigation prop
   const [status, setStatus] = useState("");
   const [isPlaying, setIsPlaying] = useState(true); // Track if it's playing or paused
 
@@ -143,6 +144,19 @@ const MPVControlsScreen = () => {
         </Icon.Button>
       </View>
 
+      {/* New Button to navigate to "Run Command" screen */}
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Run Custom Command"
+          onPress={() => navigation.navigate("Run Command")}
+        />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Movie/Series list"
+          onPress={() => navigation.navigate("Movies List")}
+        />
+      </View>
       <Text style={styles.status}>{status}</Text>
     </View>
   );
@@ -185,6 +199,11 @@ const styles = StyleSheet.create({
   },
   seekButton: {
     backgroundColor: "#FF5722", // Orange for seek buttons
+  },
+  buttonContainer: {
+    marginTop: 20,
+    width: "100%",
+    paddingHorizontal: 50,
   },
   status: {
     marginTop: 20,

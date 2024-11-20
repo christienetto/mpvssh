@@ -10,7 +10,8 @@ import {
 } from "react-native";
 import axios from "axios";
 
-const VideosListScreen = ({ route }) => {
+const VideosListScreen = ({ route, navigation }) => {
+  // Destructure navigation prop
   const { folder } = route.params;
   const [videos, setVideos] = useState([]);
   const [status, setStatus] = useState("");
@@ -58,6 +59,15 @@ const VideosListScreen = ({ route }) => {
         keyExtractor={(item, index) => index.toString()}
         style={styles.list}
       />
+
+      {/* Button to navigate to MPV Controls */}
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Go to MPV Controls"
+          onPress={() => navigation.navigate("MPV Controls")} // Navigate to MPV Controls screen
+        />
+      </View>
+
       <Text style={styles.status}>{status}</Text>
     </View>
   );
@@ -92,6 +102,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     color: "green",
+  },
+  buttonContainer: {
+    marginTop: 20,
+    width: "100%",
+    paddingHorizontal: 50,
   },
 });
 
