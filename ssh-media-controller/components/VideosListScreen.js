@@ -27,7 +27,7 @@ const VideosListScreen = ({ route }) => {
   };
 
   const playVideo = async (video) => {
-    const command = `DISPLAY=:0 mpv /home/chris/movies/${folder}/${video}`;
+    const command = `DISPLAY=:0 mpv --fullscreen --input-ipc-server=/tmp/mpvsocket /home/chris/movies/${folder}/${video}`;
     try {
       const response = await axios.post("http://192.168.1.138:8080/ssh", {
         host: "192.168.1.138",
