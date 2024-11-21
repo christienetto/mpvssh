@@ -10,11 +10,11 @@ const RunCommandScreen = () => {
 
   const runCommand = async () => {
     try {
-      const result = await axios.post("http://192.168.1.138:8080/ssh", {
-        host: "192.168.1.138",
+      const result = await axios.post("http://YOUR_IP:8080/ssh", {
+        host: "YOUR_IP",
         port: 22,
-        username: "chris",
-        password: "1436",
+        username: "username",
+        password: "password",
         command: command,
       });
       setResponse(result.data.output);
