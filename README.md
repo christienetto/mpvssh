@@ -32,9 +32,10 @@
 ## Getting Started 🚀
 
 1. Clone this repository to your local machine.
-2. Set up the Go backend.
-3. Open Expo Go on your phone and scan the QR code to access the app.
-4. Enjoy seamless media control with just a few taps!
+2. Set up the Go backend by go run main.go and frontend by npx expo start --tunnel.
+  
+4. Open Expo Go on your phone and scan the QR code to access the app.
+5. Enjoy seamless media control with just a few taps!
 
 ---
 
