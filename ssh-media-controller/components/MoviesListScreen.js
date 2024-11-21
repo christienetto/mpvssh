@@ -16,7 +16,7 @@ const MoviesListScreen = ({ navigation }) => {
 
   const fetchFolders = async () => {
     try {
-      const response = await axios.get("http://192.168.1.138:8080/movies");
+      const response = await axios.get("http://YOUR_IP:8080/movies");
       setFolders(response.data.folders);
     } catch (error) {
       setStatus(`Failed to fetch folders: ${error.message}`);
