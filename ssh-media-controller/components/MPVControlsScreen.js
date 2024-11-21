@@ -10,11 +10,11 @@ const MPVControlsScreen = ({ navigation }) => {
 
   const sendCommand = async (command) => {
     try {
-      const response = await axios.post("http://192.168.1.138:8080/ssh", {
-        host: "192.168.1.138",
+      const response = await axios.post("http://YOUR_IP:8080/ssh", {
+        host: "YOUR_IP",
         port: 22,
-        username: "chris",
-        password: "1436",
+        username: "username",
+        password: "password",
         command: command,
       });
       setStatus(`Command executed successfully: ${response.data.output}`);
@@ -26,11 +26,11 @@ const MPVControlsScreen = ({ navigation }) => {
   const handlePlayPause = async () => {
     try {
       // Step 1: Get the PID of mpv
-      const pidResponse = await axios.post("http://192.168.1.138:8080/ssh", {
-        host: "192.168.1.138",
+      const pidResponse = await axios.post("http://YOUR_IP:8080/ssh", {
+        host: "YOUR_IP",
         port: 22,
-        username: "chris",
-        password: "1436",
+        username: "username",
+        password: "password",
         command: "pidof mpv",
       });
 
