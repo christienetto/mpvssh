@@ -19,7 +19,7 @@ const VideosListScreen = ({ route, navigation }) => {
   const fetchVideos = async () => {
     try {
       const response = await axios.get(
-        `http://192.168.1.138:8080/movies/${folder}`
+        `http://YOUR_IP:8080/movies/${folder}`
       );
       setVideos(response.data.videos);
     } catch (error) {
@@ -30,11 +30,11 @@ const VideosListScreen = ({ route, navigation }) => {
   const playVideo = async (video) => {
     const command = `DISPLAY=:0 mpv --fullscreen --input-ipc-server=/tmp/mpvsocket /home/chris/movies/${folder}/${video}`;
     try {
-      const response = await axios.post("http://192.168.1.138:8080/ssh", {
-        host: "192.168.1.138",
+      const response = await axios.post("http://YOUR_IP:8080/ssh", {
+        host: "YOUR_IP",
         port: 22,
-        username: "chris",
-        password: "1436",
+        username: "username",
+        password: "password",
         command: command,
       });
       setStatus(`Playing video: ${response.data.output}`);
