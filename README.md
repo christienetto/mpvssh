@@ -1,6 +1,6 @@
 # mpvssh 🎥🎶
 
-**mpvssh** is a self-hosted media control app that gives you full control over your media player via SSH. With a sleek interface powered by **Expo Go** and a backend written in **Go**, you can easily play, pause, skip, rewind, and adjust the volume of your media. Additionally, you can execute custom terminal commands and explore available movies — just click to play!
+**mpvssh** is a self-hosted mpv control app that gives you full control over your media player via SSH. With a sleek interface powered by **Expo Go** and a backend written in **Go**, you can easily play, pause, skip, rewind, and adjust the volume of your media. Additionally, you can execute custom terminal commands and explore available movies — just click to play!
 
 ---
 
