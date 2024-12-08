@@ -39,7 +39,7 @@ func main() {
 
 	// Route to list folders (movies/series)
 	r.GET("/movies", func(c *gin.Context) {
-		moviesDir := "/home/chris/movies" // Replace with your movies directory
+		moviesDir := "/home/chris/med/movies" // Replace with your movies directory
 		folders, err := listFolders(moviesDir)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -51,7 +51,7 @@ func main() {
 
 	// Route to list videos in a folder
 	r.GET("/movies/:folder", func(c *gin.Context) {
-		moviesDir := "/home/chris/movies" // Replace with your movies directory
+		moviesDir := "/home/chris/med/movies" // Replace with your movies directory
 		folder := c.Param("folder")
 		fullPath := filepath.Join(moviesDir, folder)
 

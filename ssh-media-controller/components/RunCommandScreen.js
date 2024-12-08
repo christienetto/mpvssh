@@ -1,45 +1,45 @@
-// src/components/RunCommandScreen.js
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Switch } from "react-native";
 import axios from "axios";
+import { useDarkMode } from "../contexts/DarkModeContext"; // Import the hook
 
-const RunCommandScreen = () => {
+const RunCommandScreen = ({ navigation }) => {
+  const { darkMode, setDarkMode } = useDarkMode(); // Access darkMode state
   const [command, setCommand] = useState("");
-  const [response, setResponse] = useState("");
-  const [error, setError] = useState("");
+  const [status, setStatus] = useState("");
 
   const runCommand = async () => {
     try {
-      const result = await axios.post("http://192.168.1.138:8080/ssh", {
+      const response = await axios.post("http://192.168.1.138:8080/ssh", {
         host: "192.168.1.138",
         port: 22,
         username: "chris",
         password: "1436",
         command: command,
       });
-      setResponse(result.data.output);
-      setError("");
-    } catch (err) {
-      setResponse("");
-      setError(`Error: ${err.message}`);
+      setStatus(`Command executed successfully: ${response.data.output}`);
+    } catch (error) {
+      setStatus(`Failed to execute command: ${error.message}`);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Run Custom SSH Command</Text>
+    <View style={[styles.container, { backgroundColor: darkMode ? "#121212" : "#fff" }]}>
+      <Text style={[styles.title, { color: darkMode ? "#fff" : "#000" }]}>Run Command</Text>
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, { backgroundColor: darkMode ? "#333" : "#fff", color: darkMode ? "#fff" : "#000" }]}
+        placeholder="Enter your command"
+        placeholderTextColor={darkMode ? "#aaa" : "#888"}
         value={command}
         onChangeText={setCommand}
-        placeholder="Enter command"
       />
-
       <Button title="Run Command" onPress={runCommand} />
 
-      {response && <Text style={styles.response}>{response}</Text>}
-      {error && <Text style={styles.error}>{error}</Text>}
+      <Text style={[styles.status, { color: darkMode ? "#fff" : "#000" }]}>
+        {status}
+      </Text>
+
     </View>
   );
 };
@@ -58,20 +58,23 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
     marginBottom: 20,
-    paddingLeft: 10,
   },
-  response: {
+  status: {
     marginTop: 20,
-    fontSize: 16,
-    color: "green",
+    fontSize: 18,
+    fontWeight: "bold",
   },
-  error: {
+  switchContainer: {
     marginTop: 20,
-    fontSize: 16,
-    color: "red",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  switchText: {
+    fontSize: 18,
+    marginRight: 10,
   },
 });
 

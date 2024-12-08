@@ -1,5 +1,7 @@
 # mpvssh 🎥🎶
 
+START WITH mpvssh IN TERMINAL!
+
 **mpvssh** is a self-hosted media control app that gives you full control over your media player via SSH. With a sleek interface powered by **Expo Go** and a backend written in **Go**, you can easily play, pause, skip, rewind, and adjust the volume of your media. Additionally, you can execute custom terminal commands and explore available movies — just click to play!
 
 ---
@@ -9,11 +11,12 @@
 - **Control Media Playback** 🎬
   - Play, pause, skip, and rewind your media files.
   - Adjust the volume with simple touch controls.
-  
 - **Custom Terminal Commands** 💻
+
   - Execute custom terminal commands directly from the app interface.
 
 - **Movie List Fetching** 🎥
+
   - Fetch and view a list of available movies.
   - Click to open and play any movie instantly!
 
@@ -26,7 +29,16 @@
 
 - **Same Network**: Your phone and the server must be on the same Wi-Fi network.
 - **Static IP**: The server requires a static IP address (this is currently not set as a `.env` variable).
-  
+
+# Make sure:
+
+- sudo systemctl stop firewalld
+- sudo systemctl enable sshd
+- sudo systemctl start sshd
+- sudo systemctl status sshd
+- npm install ngrok
+- p -S socat
+
 ---
 
 ## Getting Started 🚀
@@ -44,7 +56,7 @@
 - **Backend**: Powered by **Go** for efficient server-side operations.
 - **Communication**: Uses **SSH** for secure communication between the app and the server.
 - **Tunneling**: **Ngrok** for exposing the local server to your phone.
-  
+
 ---
 
 ## Future Improvements 🚧

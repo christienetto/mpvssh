@@ -1,12 +1,28 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Button } from "react-native"; // Import Button here
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Switch } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MPVControlsScreen = ({ navigation }) => {
-  // Destructure navigation prop
   const [status, setStatus] = useState("");
   const [isPlaying, setIsPlaying] = useState(true); // Track if it's playing or paused
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Load dark mode preference from AsyncStorage
+    const loadDarkModePreference = async () => {
+      try {
+        const savedDarkMode = await AsyncStorage.getItem('darkMode');
+        if (savedDarkMode !== null) {
+          setDarkMode(JSON.parse(savedDarkMode)); // Parse string to boolean
+        }
+      } catch (error) {
+        console.error("Failed to load dark mode preference:", error);
+      }
+    };
+    loadDarkModePreference();
+  }, []);
 
   const sendCommand = async (command) => {
     try {
@@ -25,7 +41,6 @@ const MPVControlsScreen = ({ navigation }) => {
 
   const handlePlayPause = async () => {
     try {
-      // Step 1: Get the PID of mpv
       const pidResponse = await axios.post("http://192.168.1.138:8080/ssh", {
         host: "192.168.1.138",
         port: 22,
@@ -38,11 +53,9 @@ const MPVControlsScreen = ({ navigation }) => {
 
       if (pid) {
         if (isPlaying) {
-          // Step 2: Pause the process (mpv)
           await sendCommand(`kill -STOP ${pid}`);
           setIsPlaying(false); // Set the state to paused
         } else {
-          // Step 3: Resume the process (mpv)
           await sendCommand(`kill -CONT ${pid}`);
           setIsPlaying(true); // Set the state to playing
         }
@@ -57,7 +70,6 @@ const MPVControlsScreen = ({ navigation }) => {
 
   const handleSeekForward = async () => {
     try {
-      // Use the IPC command to seek forward 10 seconds
       await sendCommand(
         'echo \'{"command": ["seek", 10]}\' | socat - /tmp/mpvsocket'
       );
@@ -69,7 +81,6 @@ const MPVControlsScreen = ({ navigation }) => {
 
   const handleSeekBackward = async () => {
     try {
-      // Use the IPC command to seek backward 10 seconds
       await sendCommand(
         'echo \'{"command": ["seek", -10]}\' | socat - /tmp/mpvsocket'
       );
@@ -79,24 +90,24 @@ const MPVControlsScreen = ({ navigation }) => {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>MPV Controls</Text>
 
-      {/* 3x2 Grid Layout */}
+
+  return (
+    <View style={[styles.container, { backgroundColor: darkMode ? "#121212" : "#fff" }]}>
+      <Text style={[styles.title, { color: darkMode ? "#fff" : "#000" }]}>MPV Controls</Text>
+
       <View style={styles.gridContainer}>
         <Icon.Button
-          name={isPlaying ? "pause-circle" : "play-circle"} // Toggle between play and pause icons
-          backgroundColor="#4CAF50"
+          name={isPlaying ? "pause-circle" : "play-circle"}
+          backgroundColor={darkMode ? "#3e8e41" : "#4CAF50"}
           onPress={handlePlayPause}
           style={[styles.button, styles.playPauseButton]}
         >
           {isPlaying ? "Pause" : "Play"}
         </Icon.Button>
-
         <Icon.Button
           name="volume-up"
-          backgroundColor="#3b5998"
+          backgroundColor={darkMode ? "#2d4373" : "#3b5998"}
           onPress={() =>
             sendCommand("pactl set-sink-volume @DEFAULT_SINK@ +5%")
           }
@@ -104,10 +115,9 @@ const MPVControlsScreen = ({ navigation }) => {
         >
           Volume Up
         </Icon.Button>
-
         <Icon.Button
           name="volume-down"
-          backgroundColor="#3b5998"
+          backgroundColor={darkMode ? "#2d4373" : "#3b5998"}
           onPress={() =>
             sendCommand("pactl set-sink-volume @DEFAULT_SINK@ -5%")
           }
@@ -115,28 +125,25 @@ const MPVControlsScreen = ({ navigation }) => {
         >
           Volume Down
         </Icon.Button>
-
         <Icon.Button
           name="stop"
-          backgroundColor="#f44336"
+          backgroundColor={darkMode ? "#b71c1c" : "#f44336"}
           onPress={() => sendCommand("pkill -2 mpv")}
           style={[styles.button, styles.stopButton]}
         >
           Stop Playback
         </Icon.Button>
-
         <Icon.Button
           name="fast-backward"
-          backgroundColor="#FF5722"
+          backgroundColor={darkMode ? "#d84915" : "#FF5722"}
           onPress={handleSeekBackward}
           style={[styles.button, styles.seekButton]}
         >
           Seek Backward
         </Icon.Button>
-
         <Icon.Button
           name="fast-forward"
-          backgroundColor="#FF5722"
+          backgroundColor={darkMode ? "#d84915" : "#FF5722"}
           onPress={handleSeekForward}
           style={[styles.button, styles.seekButton]}
         >
@@ -144,20 +151,8 @@ const MPVControlsScreen = ({ navigation }) => {
         </Icon.Button>
       </View>
 
-      {/* New Button to navigate to "Run Command" screen */}
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Run Custom Command"
-          onPress={() => navigation.navigate("Run Command")}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Movie/Series list"
-          onPress={() => navigation.navigate("Movies List")}
-        />
-      </View>
-      <Text style={styles.status}>{status}</Text>
+
+      <Text style={[styles.status, { color: darkMode ? "#fff" : "#000" }]}>{status}</Text>
     </View>
   );
 };
@@ -174,41 +169,43 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   gridContainer: {
-    flexDirection: "row", // Align items in a row
-    flexWrap: "wrap", // Wrap items into new rows
-    justifyContent: "center", // Center the buttons
-    width: "100%", // Full width of the screen
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    width: "100%",
   },
   button: {
-    width: 120, // Width of each button
-    height: 120, // Height of each button
+    width: 120,
+    height: 120,
+    margin: 10,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 60, // Make the buttons circular
-    fontSize: 24, // Larger text/icon size
-    margin: 10, // Spacing between buttons
   },
   playPauseButton: {
-    backgroundColor: "#4CAF50", // Green for play/pause
+    backgroundColor: "#4CAF50",
   },
   volumeButton: {
-    backgroundColor: "#3b5998", // Default blue for volume buttons
+    backgroundColor: "#3b5998",
   },
   stopButton: {
-    backgroundColor: "#f44336", // Red for stop button
+    backgroundColor: "#f44336",
   },
   seekButton: {
-    backgroundColor: "#FF5722", // Orange for seek buttons
+    backgroundColor: "#FF5722",
   },
-  buttonContainer: {
+  switchContainer: {
     marginTop: 20,
-    width: "100%",
-    paddingHorizontal: 50,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  switchText: {
+    fontSize: 18,
+    marginRight: 10,
   },
   status: {
     marginTop: 20,
-    fontSize: 16,
-    color: "green",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 
