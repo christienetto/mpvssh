@@ -1,28 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Switch } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDarkMode } from "../contexts/DarkModeContext"; // Import the context
 
 const MPVControlsScreen = ({ navigation }) => {
   const [status, setStatus] = useState("");
-  const [isPlaying, setIsPlaying] = useState(true); // Track if it's playing or paused
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    // Load dark mode preference from AsyncStorage
-    const loadDarkModePreference = async () => {
-      try {
-        const savedDarkMode = await AsyncStorage.getItem('darkMode');
-        if (savedDarkMode !== null) {
-          setDarkMode(JSON.parse(savedDarkMode)); // Parse string to boolean
-        }
-      } catch (error) {
-        console.error("Failed to load dark mode preference:", error);
-      }
-    };
-    loadDarkModePreference();
-  }, []);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const { darkMode } = useDarkMode(); // Get darkMode value from context
 
   const sendCommand = async (command) => {
     try {
@@ -54,10 +39,10 @@ const MPVControlsScreen = ({ navigation }) => {
       if (pid) {
         if (isPlaying) {
           await sendCommand(`kill -STOP ${pid}`);
-          setIsPlaying(false); // Set the state to paused
+          setIsPlaying(false);
         } else {
           await sendCommand(`kill -CONT ${pid}`);
-          setIsPlaying(true); // Set the state to playing
+          setIsPlaying(true);
         }
         setStatus(isPlaying ? "Paused" : "Resumed");
       } else {
@@ -90,69 +75,57 @@ const MPVControlsScreen = ({ navigation }) => {
     }
   };
 
-
-
   return (
     <View style={[styles.container, { backgroundColor: darkMode ? "#121212" : "#fff" }]}>
       <Text style={[styles.title, { color: darkMode ? "#fff" : "#000" }]}>MPV Controls</Text>
 
       <View style={styles.gridContainer}>
         <Icon.Button
-          name={isPlaying ? "pause-circle" : "play-circle"}
           backgroundColor={darkMode ? "#3e8e41" : "#4CAF50"}
           onPress={handlePlayPause}
           style={[styles.button, styles.playPauseButton]}
         >
-          {isPlaying ? "Pause" : "Play"}
         </Icon.Button>
         <Icon.Button
-          name="volume-up"
           backgroundColor={darkMode ? "#2d4373" : "#3b5998"}
           onPress={() =>
             sendCommand("pactl set-sink-volume @DEFAULT_SINK@ +5%")
           }
           style={[styles.button, styles.volumeButton]}
         >
-          Volume Up
         </Icon.Button>
         <Icon.Button
-          name="volume-down"
+          backgroundColor={darkMode ? "#b71c1c" : "#f44336"}
+          onPress={() => sendCommand("pkill -2 mpv")}
+          style={[styles.button, styles.stopButton]}
+        >
+        </Icon.Button>
+        <Icon.Button
           backgroundColor={darkMode ? "#2d4373" : "#3b5998"}
           onPress={() =>
             sendCommand("pactl set-sink-volume @DEFAULT_SINK@ -5%")
           }
           style={[styles.button, styles.volumeButton]}
         >
-          Volume Down
         </Icon.Button>
+
         <Icon.Button
-          name="stop"
-          backgroundColor={darkMode ? "#b71c1c" : "#f44336"}
-          onPress={() => sendCommand("pkill -2 mpv")}
-          style={[styles.button, styles.stopButton]}
-        >
-          Stop Playback
-        </Icon.Button>
-        <Icon.Button
-          name="fast-backward"
           backgroundColor={darkMode ? "#d84915" : "#FF5722"}
           onPress={handleSeekBackward}
           style={[styles.button, styles.seekButton]}
         >
-          Seek Backward
         </Icon.Button>
+
         <Icon.Button
-          name="fast-forward"
           backgroundColor={darkMode ? "#d84915" : "#FF5722"}
           onPress={handleSeekForward}
           style={[styles.button, styles.seekButton]}
         >
-          Seek Forward
         </Icon.Button>
       </View>
 
-
       <Text style={[styles.status, { color: darkMode ? "#fff" : "#000" }]}>{status}</Text>
+
     </View>
   );
 };
@@ -163,10 +136,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    paddingTop: 40,
   },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
+    fontSize: 28,
+    fontWeight: "700",
+    marginBottom: 30,
+    textAlign: "center",
+    fontFamily: "Arial, sans-serif", // Modern font
   },
   gridContainer: {
     flexDirection: "row",
@@ -177,9 +154,15 @@ const styles = StyleSheet.create({
   button: {
     width: 120,
     height: 120,
-    margin: 10,
+    margin: 15,
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 10,
+    elevation: 5, // Shadow effect for better depth
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
   playPauseButton: {
     backgroundColor: "#4CAF50",
@@ -193,19 +176,11 @@ const styles = StyleSheet.create({
   seekButton: {
     backgroundColor: "#FF5722",
   },
-  switchContainer: {
-    marginTop: 20,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  switchText: {
-    fontSize: 18,
-    marginRight: 10,
-  },
   status: {
     marginTop: 20,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
+    textAlign: "center",
   },
 });
 

@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  Button,
   FlatList,
   TouchableOpacity,
   StyleSheet,
-  Switch,
+  SafeAreaView,
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -31,14 +30,19 @@ const MoviesListScreen = ({ navigation }) => {
     loadDarkModePreference();
   }, []);
 
-  const fetchFolders = async () => {
-    try {
-      const response = await axios.get("http://192.168.1.138:8080/movies");
-      setFolders(response.data.folders);
-    } catch (error) {
-      setStatus(`Failed to fetch folders: ${error.message}`);
-    }
-  };
+  // Fetch movies automatically when the page loads
+  useEffect(() => {
+    const fetchFolders = async () => {
+      try {
+        const response = await axios.get("http://192.168.1.138:8080/movies");
+        setFolders(response.data.folders);
+      } catch (error) {
+        setStatus(`Failed to fetch folders: ${error.message}`);
+      }
+    };
+
+    fetchFolders();
+  }, []); // Empty dependency array to run only once when the component is mounted
 
   const renderFolder = ({ item }) => (
     <TouchableOpacity
@@ -49,11 +53,10 @@ const MoviesListScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-
   return (
-    <View style={[styles.container, { backgroundColor: darkMode ? "#121212" : "#fff" }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: darkMode ? "#121212" : "#fff" }]}>
       <Text style={[styles.title, { color: darkMode ? "#fff" : "#000" }]}>Movies/Series List</Text>
-      <Button title="Fetch Movies/Series" onPress={fetchFolders} />
+
       <FlatList
         data={folders}
         renderItem={renderFolder}
@@ -61,8 +64,7 @@ const MoviesListScreen = ({ navigation }) => {
         style={styles.list}
       />
       <Text style={[styles.status, { color: darkMode ? "#fff" : "#000" }]}>{status}</Text>
-
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -72,10 +74,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    paddingTop: 40, // Add paddingTop to avoid notch
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 40, // Increased marginBottom to move the title down
   },
   folder: {
     padding: 10,

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Switch } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Switch } from "react-native";
 import axios from "axios";
 import { useDarkMode } from "../contexts/DarkModeContext"; // Import the hook
 
@@ -34,12 +34,20 @@ const RunCommandScreen = ({ navigation }) => {
         value={command}
         onChangeText={setCommand}
       />
-      <Button title="Run Command" onPress={runCommand} />
 
-      <Text style={[styles.status, { color: darkMode ? "#fff" : "#000" }]}>
-        {status}
-      </Text>
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: darkMode ? "#333" : "#007BFF" }]}
+        onPress={runCommand}
+      >
+        <Text style={[styles.buttonText, { color: "#fff" }]}>Execute</Text>
+      </TouchableOpacity>
 
+      {status && (
+        <Text style={[styles.status, { color: darkMode ? "#fff" : "#000" }]}>
+          {status}
+        </Text>
+      )}
+      
     </View>
   );
 };
@@ -50,27 +58,48 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    paddingTop: 40,
   },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
+    fontSize: 28,
+    fontWeight: "700",
+    marginBottom: 30,
+    textAlign: "center",
+    fontFamily: "Arial, sans-serif", // Modern font
   },
   input: {
     width: "100%",
-    height: 40,
-    borderRadius: 5,
-    paddingHorizontal: 10,
+    height: 45,
+    borderRadius: 10,
+    paddingHorizontal: 15,
     marginBottom: 20,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: "#007BFF",
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    marginBottom: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#fff",
   },
   status: {
     marginTop: 20,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
+    textAlign: "center",
   },
   switchContainer: {
     marginTop: 20,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
   },
   switchText: {
     fontSize: 18,

@@ -6,7 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
-  Switch,
+  SafeAreaView, // SafeAreaView for handling the notch
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -59,8 +59,6 @@ const VideosListScreen = ({ route, navigation }) => {
     }
   };
 
-
-
   const renderVideo = ({ item }) => (
     <TouchableOpacity style={styles.folder} onPress={() => playVideo(item)}>
       <Text style={styles.folderText}>{item}</Text>
@@ -68,7 +66,7 @@ const VideosListScreen = ({ route, navigation }) => {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: darkMode ? "#121212" : "#fff" }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: darkMode ? "#121212" : "#fff" }]}>
       <Text style={[styles.title, { color: darkMode ? "#fff" : "#000" }]}>{folder}</Text>
       <Button title="Fetch Videos" onPress={fetchVideos} />
       <FlatList
@@ -86,8 +84,7 @@ const VideosListScreen = ({ route, navigation }) => {
       </View>
 
       <Text style={[styles.status, { color: darkMode ? "#fff" : "#000" }]}>{status}</Text>
-
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -100,6 +97,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+    marginTop: 40, // Adjust marginTop to move the title down
     marginBottom: 20,
   },
   folder: {
