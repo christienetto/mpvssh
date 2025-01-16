@@ -1,4 +1,4 @@
-# mpvssh 🎥🎶
+# mpvssh 
 
 START WITH mpvssh IN TERMINAL!
 
