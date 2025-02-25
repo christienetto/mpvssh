@@ -45,10 +45,20 @@ START WITH mpvssh IN TERMINAL!
 
 1. Clone this repository to your local machine.
 2. Set up the Go backend.
-3. Open Expo Go on your phone and scan the QR code to access the app.
+3. Open Expo Go on your phone and scan the QR code to access the app. 
+- expo start --tunnel
+
 4. Enjoy seamless media control with just a few taps!
 
 ---
+
+## Testing
+1. Make sure you are on the same internet on both devices
+2. curl localhost:8080/movies, make sure they are in folders
+2. port forward 22
+2. Open the app and fetch movies
+
+
 
 ## Technology Stack 🛠️
 

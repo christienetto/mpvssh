@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 type SSHRequest struct {
@@ -17,6 +19,19 @@ type SSHRequest struct {
 }
 
 func main() {
+	// Load the .env file (specify the correct path)
+	err := godotenv.Load("../.env") // Since .env is one directory higher
+	if err != nil {
+		fmt.Println("Warning: Could not load .env file")
+	}
+
+	// Get MoviesDir from environment
+	moviesDir := os.Getenv("MoviesDir")
+	if moviesDir == "" {
+		fmt.Println("Error: MoviesDir environment variable is not set")
+		return
+	}
+
 	r := gin.Default()
 	r.Use(cors.Default()) // Enable CORS for frontend communication
 
@@ -39,7 +54,6 @@ func main() {
 
 	// Route to list folders (movies/series)
 	r.GET("/movies", func(c *gin.Context) {
-		moviesDir := "/home/chris/med/movies" // Replace with your movies directory
 		folders, err := listFolders(moviesDir)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -51,7 +65,6 @@ func main() {
 
 	// Route to list videos in a folder
 	r.GET("/movies/:folder", func(c *gin.Context) {
-		moviesDir := "/home/chris/med/movies" // Replace with your movies directory
 		folder := c.Param("folder")
 		fullPath := filepath.Join(moviesDir, folder)
 

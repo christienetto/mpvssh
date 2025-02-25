@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LOCAL_IP, MoviesDir } from '@env';  // Import the environment variable
 
 const VideosListScreen = ({ route, navigation }) => {
   const { folder } = route.params;
@@ -31,11 +32,10 @@ const VideosListScreen = ({ route, navigation }) => {
     };
     loadDarkModePreference();
   }, []);
-
   const fetchVideos = async () => {
     try {
       const response = await axios.get(
-        `http://192.168.1.138:8080/movies/${folder}`
+        `http://${LOCAL_IP}:8080/movies/${folder}`
       );
       setVideos(response.data.videos);
     } catch (error) {
@@ -44,10 +44,10 @@ const VideosListScreen = ({ route, navigation }) => {
   };
 
   const playVideo = async (video) => {
-    const command = `DISPLAY=:0 mpv --fullscreen --input-ipc-server=/tmp/mpvsocket "/home/chris/med/movies/${folder}/${video}"`;
+    const command = `DISPLAY=:0 mpv --fullscreen --input-ipc-server=/tmp/mpvsocket "${MoviesDir}/${folder}/${video}"`;
     try {
-      const response = await axios.post("http://192.168.1.138:8080/ssh", {
-        host: "192.168.1.138",
+      const response = await axios.post(`http://${LOCAL_IP}:8080/ssh`, {
+        host: `${LOCAL_IP}`,
         port: 22,
         username: "chris",
         password: "1436",

@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Switch } from "react-native";
 import axios from "axios";
 import { useDarkMode } from "../contexts/DarkModeContext"; // Import the hook
+import { LOCAL_IP } from '@env';  // Import the environment variable
+
+
 
 const RunCommandScreen = ({ navigation }) => {
   const { darkMode, setDarkMode } = useDarkMode(); // Access darkMode state
@@ -10,11 +13,11 @@ const RunCommandScreen = ({ navigation }) => {
 
   const runCommand = async () => {
     try {
-      const response = await axios.post("http://192.168.1.138:8080/ssh", {
-        host: "192.168.1.138",
+      const response = await axios.post(`http://${LOCAL_IP}:8080/ssh`, {
+        host: "", //????
         port: 22,
-        username: "chris",
-        password: "1436",
+        username: "",
+        password: "",
         command: command,
       });
       setStatus(`Command executed successfully: ${response.data.output}`);

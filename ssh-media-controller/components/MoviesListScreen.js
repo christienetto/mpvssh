@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LOCAL_IP } from '@env';  // Import the environment variable
+
 
 const MoviesListScreen = ({ navigation }) => {
   const [folders, setFolders] = useState([]);
@@ -34,7 +36,7 @@ const MoviesListScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchFolders = async () => {
       try {
-        const response = await axios.get("http://192.168.1.138:8080/movies");
+        const response = await axios.get(`http://${LOCAL_IP}:8080/movies`);
         setFolders(response.data.folders);
       } catch (error) {
         setStatus(`Failed to fetch folders: ${error.message}`);
