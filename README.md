@@ -1,7 +1,5 @@
 # mpvssh 
 
-START WITH mpvssh IN TERMINAL!
-
 **mpvssh** is a self-hosted media control app that gives you full control over your media player via SSH. With a sleek interface powered by **Expo Go** and a backend written in **Go**, you can easily play, pause, skip, rewind, and adjust the volume of your media. Additionally, you can execute custom terminal commands and explore available movies — just click to play!
 
 ---
@@ -15,12 +13,12 @@ START WITH mpvssh IN TERMINAL!
 
   - Execute custom terminal commands directly from the app interface.
 
-- **Movie List Fetching** 🎥
+- **Movie List Fetching** 
 
   - Fetch and view a list of available movies.
   - Click to open and play any movie instantly!
 
-- **SSH Connectivity** 🔐
+- **SSH Connectivity** 
   - Connect to your server via **SSH** for seamless media control.
 
 ---
@@ -41,7 +39,7 @@ START WITH mpvssh IN TERMINAL!
 
 ---
 
-## Getting Started 🚀
+## Getting Started 
 
 1. Clone this repository to your local machine.
 2. Set up the Go backend.
@@ -60,7 +58,7 @@ START WITH mpvssh IN TERMINAL!
 
 
 
-## Technology Stack 🛠️
+## Technology Stack 
 
 - **Frontend**: Built using **Expo Go** and React Native.
 - **Backend**: Powered by **Go** for efficient server-side operations.
@@ -69,7 +67,7 @@ START WITH mpvssh IN TERMINAL!
 
 ---
 
-## Future Improvements 🚧
+## Future Improvements 
 
 - Make the IP address configurable through a `.env` file.
 - Enhance error handling and security features.
